@@ -1,0 +1,537 @@
+{
+	"info": {
+		"_postman_id": "1021dfc1-4253-484a-972e-b554937cd6dc",
+		"name": "M2-Final_Project",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "35154473"
+	},
+	"item": [
+		{
+			"name": "Register user",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test('Response status code is 201', function () {",
+							"    pm.expect(pm.response.code).to.equal(201);",
+							"})",
+							"",
+							"pm.test('Response has the required fields - username, role, and id', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('username');",
+							"    pm.expect(responseData).to.have.property('role');",
+							"    pm.expect(responseData).to.have.property('id');",
+							"})",
+							"",
+							"pm.test('Username is a non-empty string', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.username).to.exist.and.to.be.a('string').and.to.have.lengthOf.at.least(1, 'Username should not be empty');",
+							"})",
+							"",
+							"pm.test('ID is a non-negative integer', function () {",
+							"    const responseData = pm.response.json();",
+							"    pm.expect(responseData.id).to.be.a('number');",
+							"    pm.expect(responseData.id).to.be.at.least(0);",
+							"})"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"sina\",\r\n    \"password\": \"password\",\r\n    \"confirmPassword\": \"password\",\r\n    \"address\": \"800 8th Avenue\",\r\n    \"city\": \"Springfield\",\r\n    \"stateCode\": \"IL\",\r\n    \"ZIP\": \"62629\",\r\n    \"role\": \"ROLE_USER\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://www.localhost:9000/register",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"register"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Login",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"let jsonData = pm.response.json();\r",
+							"pm.collectionVariables.set(\"token\", jsonData.token);\r",
+							"",
+							"pm.test(\"Response status code is 200\", function () {",
+							"  pm.expect(pm.response.code).to.equal(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Content type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields - token, user\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('object');",
+							"    pm.expect(responseData).to.have.property('token');",
+							"    pm.expect(responseData).to.have.property('user');",
+							"});",
+							"",
+							"",
+							"pm.test(\"Username is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.user.username).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Username should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Role is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.user.role).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Role should not be empty\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"protocolProfileBehavior": {
+				"strictSSL": false
+			},
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTcyMjQ3NTEyNH0.Uzv_6LBTKY39H__dayUA4BZ4cRu2qHmo1WgZ64VykpXU-ECGJRuFkQDSQKkLx4oMgYMvkAyU00VVNAvRjxG7sQ",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"username\": \"user\",\r\n    \"password\": \"password\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "www.localhost:9000/login",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"login"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get all products",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response status code is 200\", function () {",
+							"    pm.response.to.have.status(200);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response has the required fields\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    ",
+							"    responseData.forEach(function(product) {",
+							"        pm.expect(product).to.have.property('productId');",
+							"        pm.expect(product).to.have.property('productSku');",
+							"        pm.expect(product).to.have.property('name');",
+							"        pm.expect(product).to.have.property('description');",
+							"        pm.expect(product).to.have.property('price');",
+							"        pm.expect(product).to.have.property('imageName');",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"ProductSku is a non-empty string\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(product) {",
+							"        pm.expect(product.productSku).to.be.a('string').and.to.have.lengthOf.at.least(1, \"ProductSku should not be empty\");",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"    const responseData = pm.response.json();",
+							"    ",
+							"    pm.expect(responseData).to.be.an('array');",
+							"    responseData.forEach(function(product) {",
+							"        pm.expect(product.price).to.be.a('number');",
+							"        pm.expect(product.price).to.be.at.least(0);",
+							"    });",
+							"});",
+							"",
+							"",
+							"pm.test(\"Response time is less than 200ms\", function () {",
+							"  pm.expect(pm.response.responseTime).to.be.below(200);",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.localhost:9000/products",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get products by id",
+			"event": [
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"pm.test(\"Response Content-Type is application/json\", function () {",
+							"    pm.expect(pm.response.headers.get(\"Content-Type\")).to.include(\"application/json\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Product ID is a non-negative integer\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.productId).to.be.a('number');",
+							"  pm.expect(responseData.productId).to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Product SKU is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.productSku).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Product SKU should not be empty\");",
+							"});",
+							"",
+							"",
+							"pm.test(\"Price is a non-negative number\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData).to.be.an('object');",
+							"  pm.expect(responseData.price).to.be.a('number');",
+							"  pm.expect(responseData.price).to.be.at.least(0);",
+							"});",
+							"",
+							"",
+							"pm.test(\"Image name is a non-empty string\", function () {",
+							"  const responseData = pm.response.json();",
+							"  ",
+							"  pm.expect(responseData.imageName).to.be.a('string').and.to.have.lengthOf.at.least(1, \"Image name should not be empty\");",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.localhost:9000/products/1",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Get product by sku",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.localhost:9000/products/sku/BOOK-24",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"products",
+						"sku",
+						"BOOK-24"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "View cart w/ totals",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://www.localhost:9000/cart/total?stateCode={stateCode}",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"cart",
+						"total"
+					],
+					"query": [
+						{
+							"key": "stateCode",
+							"value": "{stateCode}"
+						}
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Add item to cart",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"userId\": 1,\r\n    \"productId\": 1,\r\n    \"quantity\": 1\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://www.localhost:9000/cart/add",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"cart",
+						"add"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Delete item in cart by productId",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://www.localhost:9000/cart/delete/{productId}",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"cart",
+						"delete",
+						"{productId}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "Clear cart",
+			"request": {
+				"auth": {
+					"type": "bearer",
+					"bearer": [
+						{
+							"key": "token",
+							"value": "",
+							"type": "string"
+						}
+					]
+				},
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "http://www.localhost:9000/cart/clear",
+					"protocol": "http",
+					"host": [
+						"www",
+						"localhost"
+					],
+					"port": "9000",
+					"path": [
+						"cart",
+						"clear"
+					]
+				}
+			},
+			"response": []
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "baseUrl",
+			"value": "http://localhost:8080",
+			"type": "default"
+		},
+		{
+			"key": "token",
+			"value": "eyJhbGciOiJIUzUxMiJ9.eyJzdWIiOiJ1c2VyIiwiYXV0aCI6IlJPTEVfVVNFUiIsImV4cCI6MTY1NzY0MzI3NH0.DVYTDK3fsn80scCDYSCxdN4itbTObMVVzlpJmNZd1pC-Uh1fjLwUPN-du-OjeUTFBtDWvEuPiVjXXd1L_Dzh-A",
+			"type": "default"
+		}
+	]
+}
